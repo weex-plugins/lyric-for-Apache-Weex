@@ -24,7 +24,7 @@ weex-lyric是一个weex插件，可以通过weexpack快速集成，可以丰富w
   weexpack plugin add weex-lyric
   ```
 # 项目地址
-[github](please add you source code address)
+[github](https://github.com/weex-plugins/weex-lyric)
 
 # 已有工程集成
 ## iOS集成插件WeexLyric
