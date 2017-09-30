@@ -229,6 +229,7 @@ import com.taobao.weex.common.WXException;
 
 import com.alibaba.weex.plugin.loader.WeexPluginContainer;
 
+import org.weex.plugin.weexlyric.LyricModule;
 import org.weex.plugin.weexlyric.WXLyricView;
 
 public class WXApplication extends Application {
@@ -272,6 +273,7 @@ public class WXApplication extends Application {
       WXSDKEngine.registerModule("geolocation", GeolocationModule.class);
 
       WXSDKEngine.registerComponent("lyric", WXLyricView.class);
+      WXSDKEngine.registerModule("lyric", LyricModule.class);
 
 
 //      WXSDKEngine.registerComponent("gcanvas", WXGcanvasComponent.class);

@@ -6,4 +6,9 @@
             android:title="扫码"
             android:icon="@drawable/ic_action_scan"
             app:showAsAction="ifRoom"/>
+    <item
+            android:id="@+id/action_history"
+            android:title="历史"
+            android:icon="@android:drawable/ic_menu_recent_history"
+            app:showAsAction="ifRoom"/>
 </menu>
