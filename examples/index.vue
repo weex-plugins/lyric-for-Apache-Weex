@@ -1,30 +1,43 @@
 <template>
-	<div class="conatiner">
-		<text style="margin-bottom: 20px;">weex plugin examples</text>
-		<div @click="createAction" style="margin: 20px;padding:20px;background-color:#1ba1e2;color:#fff;"><text style="color:#fff">hello world</text></div>
-	</div>
+    <div>
+        <div style="flex-direction: row;">
+            <text class="button" @click="onLoadFile('/sdcard/qhk.trc')">file1</text>
+            <text class="button" @click="onLoadFile('/sdcard/noFile.trc')">file2</text>
+
+            <text class="button" @click="onChangeColor('#FF0000', '#00FF00')">color1</text>
+            <text class="button" @click="onChangeColor('#0000FF', '#FFFFFF')">color2</text>
+        </div>
+        <lyric style="flex: 1; background-color: brown;" :lyricFile="lyricFile"></lyric>
+        <div style="flex-direction: row;">
+            <text class="button" style="color: #000;">bottom</text>
+        </div>
+    </div>
 </template>
 
-<style>
-	.container{
-		flex: 1;
-	}
-</style>
-
 <script>
-
-	const plugin = weex.requireModule('weexLyric');
-	module.exports = {
-		data: {
-			value: '',
-			index: 0,
-			txtChange: ''
-		},
-		methods: {
-			createAction: function() {
-				plugin.show();
-
-			}
-		}
-	}
+    export default {
+        data: {
+            lyricFile: '',
+            highlightColor: '',
+            normalColor: '',
+        },
+        methods: {
+            onLoadFile: function (file) {
+                this.lyricFile = file;
+            },
+            onChangeColor: function (highColor, normalColor) {
+                this.highlightColor = highColor;
+                this.normalColor = normalColor;
+            }
+        }
+    }
 </script>
+
+<style>
+    .button {
+        background-color: aquamarine;
+        font-size: 40;
+        margin: 10;
+        padding: 10;
+    }
+</style>
