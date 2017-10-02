@@ -40,7 +40,7 @@ public class WXLyricView extends WXComponent<LyricView> {
 
     @WXComponentProp(name = "lyricFile")
     public void setLyricFile(String filePath) {
-        new ParserLyricTask(filePath);
+        new ParserLyricTask(filePath).execute();
     }
 
     @WXComponentProp(name = "playStatus")
