@@ -1,9 +1,12 @@
 package org.weex.plugin.weexlyric;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 
 import com.taobao.weex.WXSDKInstance;
@@ -45,12 +48,22 @@ public class WXLyricView extends WXComponent<LyricView> {
 
     @WXComponentProp(name = "playStatus")
     public void setPlayStatus(boolean playStatus) {
-
+        if (playStatus) {
+            startFlushView();
+        } else {
+            stopFlushView();
+        }
     }
 
-    @WXComponentProp(name = "displayMode")
-    public void setDisplayMode(LyricView.DisplayMode playMode) {
-        getHostView().setDisplayMode(playMode);
+    @WXComponentProp(name = "playTime")
+    public void updatePlayTime(int playingTime) {
+        mCurPlayingTime = playingTime;
+        boolean playFlag = mPlayFlag;
+        stopFlushView();
+        getHostView().setPlayingTime(playingTime);
+        if (playFlag) {
+            startFlushView();
+        }
     }
 
     @WXComponentProp(name = "highlightColor")
@@ -84,6 +97,16 @@ public class WXLyricView extends WXComponent<LyricView> {
         getHostView().setAlign(align);
     }
 
+    @WXComponentProp(name = "slowScroll")
+    public void setSlowScroll(boolean slowScroll) {
+        getHostView().setSlowScroll(slowScroll);
+    }
+
+    @WXComponentProp(name = "displayMode")
+    public void setDisplayMode(LyricView.DisplayMode playMode) {
+        getHostView().setDisplayMode(playMode);
+    }
+
     private class ParserLyricTask extends AsyncTask<String, Void, Lyric> {
         private String mLyricPath;
 
@@ -115,8 +138,43 @@ public class WXLyricView extends WXComponent<LyricView> {
                     msg = "歌词文件不存在";
                 }
             } else {
-                lyricView.setPlayingTime(0);
+                lyricView.setPlayingTime(mCurPlayingTime);
             }
         }
     }
+
+    private void startFlushView() {
+        mPlayFlag = true;
+        mHandler.sendEmptyMessageDelayed(0, FLUSH_INTERVAL);
+    }
+
+    private void stopFlushView() {
+        mPlayFlag = false;
+        mHandler.removeCallbacksAndMessages(null);
+    }
+
+    private long mCurPlayingTime = 0;  //默认跳到xx秒位置
+    private static final long MAX_DURATION_TIME = 8 * 60 * 1000;  //假设最大6分钟位置
+
+    private static final int FLUSH_INTERVAL = 50;
+
+    private boolean mPlayFlag;
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            final LyricView lyricView = getHostView();
+            if (lyricView == null) {
+                return;
+            }
+            mCurPlayingTime += FLUSH_INTERVAL;
+            lyricView.setPlayingTime(mCurPlayingTime);
+            if (mCurPlayingTime < MAX_DURATION_TIME) {
+                mHandler.sendEmptyMessageDelayed(0, FLUSH_INTERVAL);
+            } else {
+                mPlayFlag = false;
+            }
+        }
+    };
 }
